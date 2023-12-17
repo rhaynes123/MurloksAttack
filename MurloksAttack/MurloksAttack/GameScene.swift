@@ -21,9 +21,7 @@ class GameScene: SKScene {
         return scene
     }
     
-    func setUpScene(){
-       
-        
+    func setUpScene() {
         guard let view = self.view else {
             return
         }
@@ -41,7 +39,7 @@ class GameScene: SKScene {
     }
     
     func spawnNewMurlok() {
-        let murlokIndex = Int.random(in: 1...3)
+        let murlokIndex = Int.random(in: 1...7)
         let murlok = SKSpriteNode(imageNamed: "murlok\(murlokIndex)")
         murlok.name = "murlok"
         
@@ -70,7 +68,6 @@ class GameScene: SKScene {
         murlok.run(SKAction.sequence([moveAction, removeAction]))
     }
     override func didMove(to view: SKView) {
-        
         self.setUpScene()
         spawnMurloks()
     }
@@ -80,14 +77,13 @@ class GameScene: SKScene {
         let location = touch.location(in: self)
         let tappedNode = atPoint(location)
         
-        let murlocDeathSound = SKAction.playSoundFileNamed("murloc", waitForCompletion: false)
+        let murlocSound = SKAction.playSoundFileNamed("murloc", waitForCompletion: false)
         if tappedNode.name == "murlok" {
             // TODO the sound effect keeps making an error I'm not able to find any content on
-            run(murlocDeathSound)
+            run(murlocSound)
             tappedNode.removeFromParent()
-            
             score += 5
-            scoreLabel?.text = "Score: \(score)"
+            scoreLabel?.text = "Current Score: \(score)"
         }
     }
     
