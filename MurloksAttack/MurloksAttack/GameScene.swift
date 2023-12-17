@@ -54,7 +54,7 @@ class GameScene: SKScene {
     func spawnNewMurlok() {
         let murlokIndex = Int.random(in: 1...7)
         let murlok = SKSpriteNode(imageNamed: "murlok\(murlokIndex)")
-        murlok.name = "murlok"
+        murlok.name = "murlok\(murlokIndex)"
         
         let movesLeftToRight = Bool.random()
         let randomY = CGFloat.random(in: 0...size.height - murlok.size.height)
@@ -86,25 +86,49 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return}
+        guard let touch = touches.first else {
+            return
+        }
+        guard let view = self.view else {
+            return
+        }
         let location = touch.location(in: self)
         let tappedNode = atPoint(location)
         
         let murlocSound = SKAction.playSoundFileNamed("murloc", waitForCompletion: false)
-        if tappedNode.name == "murlok" {
+        guard let nodeName = tappedNode.name else {
+            return
+        }
+        if nodeName.contains("murlok") {
             // TODO the sound effect keeps making an error I'm not able to find any content on
             run(murlocSound)
             tappedNode.removeFromParent()
-            score += 5
+            // Giving more points based off the Murlok images
+            // Larger ones give fewer points
+            // Since this for fun we aren't putting much thought into the size based score more than eyeballing
+            switch nodeName {
+            case "murlok1", "murlok2","murlok4":
+                score += 5
+                break
+            case "murlok3","murlok5", "murlok6":
+                score += 10
+                break
+            case "murlok7":
+                score += 15
+                break
+            default:
+                score += 5
+            }
+            
             scoreLabel?.text = "Current Score: \(score)"
         }
         
         if tappedNode.name == "pauseLabel"{
-            self.view?.isPaused = true
+            view.isPaused = true
         }
         
         if tappedNode.name == "resumeLabel"{
-            self.view?.isPaused = false
+            view.isPaused = false
         }
     }
     
