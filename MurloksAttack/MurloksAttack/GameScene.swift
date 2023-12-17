@@ -10,7 +10,8 @@ import GameplayKit
 
 class GameScene: SKScene {
     var scoreLabel: SKLabelNode?
-    var timerLable : SKLabelNode?
+    var pauseLabel : SKLabelNode?
+    var resumeLabel : SKLabelNode?
     var score : Int = 0
     class func newGameScene() -> GameScene {
         guard let scene = SKScene(fileNamed: "GameScene") as? GameScene else {
@@ -22,13 +23,25 @@ class GameScene: SKScene {
     }
     
     func setUpScene() {
+        
         guard let view = self.view else {
             return
         }
+        
         let topRightInView = CGPoint(x: view.bounds.maxX - 20, y: 20)
         let topRight = convertPoint(fromView: topRightInView)
         scoreLabel = self.childNode(withName: "//scoreLabel") as? SKLabelNode
         scoreLabel?.position = topRight
+        
+        let midUpperRightInView = CGPoint(x: view.bounds.maxX - 20, y: 100)
+        let midRight = convertPoint(fromView: midUpperRightInView)
+        pauseLabel = childNode(withName: "//pauseLabel") as? SKLabelNode
+        pauseLabel?.position = midRight
+        
+        let leftMostUpperRightInView = CGPoint(x: view.bounds.maxX - 280, y: 100)
+        let leftMostRight = convertPoint(fromView: leftMostUpperRightInView)
+        resumeLabel = childNode(withName: "//resumeLabel") as? SKLabelNode
+        resumeLabel?.position = leftMostRight
     }
     
     func spawnMurloks() {
@@ -84,6 +97,14 @@ class GameScene: SKScene {
             tappedNode.removeFromParent()
             score += 5
             scoreLabel?.text = "Current Score: \(score)"
+        }
+        
+        if tappedNode.name == "pauseLabel"{
+            self.view?.isPaused = true
+        }
+        
+        if tappedNode.name == "resumeLabel"{
+            self.view?.isPaused = false
         }
     }
     
